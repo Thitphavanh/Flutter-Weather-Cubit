@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_cubit/constants/constants.dart';
+import 'package:flutter_weather_cubit/cubits/temp_settings/temp_settings_cubit.dart';
 import 'package:flutter_weather_cubit/cubits/weather/weather_cubit.dart';
 import 'package:flutter_weather_cubit/pages/search_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_weather_cubit/pages/settins_page.dart';
 import 'package:flutter_weather_cubit/widgets/error_dialog.dart';
 import 'package:recase/recase.dart';
 
@@ -42,6 +44,19 @@ class _HomePageState extends State<HomePage> {
               }
             },
           ),
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return SettingsPage();
+                  },
+                ),
+              );
+            },
+          ),
         ],
       ),
       body: _showWeather(),
@@ -49,6 +64,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   String showTemperature(double temperature) {
+    final tempUnit = context.watch<TempSettingsCubit>().state.tempUnit;
+
+    if (tempUnit == TempUnit.fahrenheit) {
+      return ((temperature * 9 / 5) + 32).toStringAsFixed(2) + '°F';
+    }
     return temperature.toStringAsFixed(2) + '°C';
   }
 
@@ -65,7 +85,7 @@ class _HomePageState extends State<HomePage> {
     final formattedString = description.titleCase;
     return Text(
       formattedString,
-      style: const TextStyle(fontSize: 24.0,color:Colors.lightBlueAccent ),
+      style: const TextStyle(fontSize: 24.0, color: Colors.blue),
       textAlign: TextAlign.center,
     );
   }
